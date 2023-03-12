@@ -1,5 +1,5 @@
 import React from "react";
-import { Pagination, Spin } from "antd";
+import { Pagination } from "antd";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { FETCH_ENDPOINT, PAGE_SIZE } from "../../Constant/Constant";
 import { useSelectedMovie } from "../Context/SelectedMovieContext";
@@ -33,15 +33,17 @@ const NowPlaying = ({ viewMode }) => {
             <MovieGrid movies={data} />
           )}
 
-          <div className="flex justify-center my-10">
-            <Pagination
-              pageSize={PAGE_SIZE}
-              current={errors ? 1 : currentPage}
-              total={totalResult}
-              onChange={handlePageChange}
-              showSizeChanger={false}
-            />
-          </div>
+          {data.length > 0 && (
+            <div className="flex justify-center my-10">
+              <Pagination
+                pageSize={PAGE_SIZE}
+                current={errors ? 1 : currentPage}
+                total={totalResult}
+                onChange={handlePageChange}
+                showSizeChanger={false}
+              />
+            </div>
+          )}
           {!!selectedMovieContext && (
             <MovieDetailsModal
               movie={selectedMovieContext}

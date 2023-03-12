@@ -33,15 +33,17 @@ const TopRated = ({ viewMode }) => {
             <MovieGrid movies={data} />
           )}
 
-          <div className="flex justify-center my-10">
-            <Pagination
-              pageSize={PAGE_SIZE}
-              current={errors ? 1 : currentPage}
-              total={totalResult}
-              onChange={handlePageChange}
-              showSizeChanger={false}
-            />
-          </div>
+          {data.length > 0 && (
+            <div className="flex justify-center my-10">
+              <Pagination
+                pageSize={PAGE_SIZE}
+                current={errors ? 1 : currentPage}
+                total={totalResult}
+                onChange={handlePageChange}
+                showSizeChanger={false}
+              />
+            </div>
+          )}
           {!!selectedMovieContext && (
             <MovieDetailsModal
               movie={selectedMovieContext}

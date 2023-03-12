@@ -7,5 +7,8 @@ export const FETCH_ENDPOINT = {
   NOW_PLAYING: "movie/now_playing",
   TOP_RATED: "movie/top_rated",
 };
+export const SEARCH_ENDPOINT = {
+  MOVIE: "/search/movie",
+};
 
 export const PAGE_SIZE = 20;

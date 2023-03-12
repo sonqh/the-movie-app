@@ -56,6 +56,7 @@ api.interceptors.response.use(
       params: error.config.params,
       data: error.config.data,
     });
+    console.log("requestId = ", requestId);
     pendingRequests.delete(requestId);
     throw error;
   }

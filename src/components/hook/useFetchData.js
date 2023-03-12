@@ -5,7 +5,7 @@ import usePrevious from "./usePrevious";
 
 const api_key = process.env.REACT_APP_TMDB_API_KEY;
 
-const useFetchData = (endpoint, payload) => {
+const useFetchData = (endpoint, query) => {
   const [data, setData] = useState(null);
   const [errors, setErrors] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +21,12 @@ const useFetchData = (endpoint, payload) => {
       setIsLoading(true);
       try {
         const response = await api.get(endpoint, {
-          params: { api_key: api_key, language: "en-US", page: page },
+          params: {
+            api_key: api_key,
+            language: "en-US",
+            page: page,
+            ...(query && { query }),
+          },
         });
         setData(response.data.results);
         setTotalResult(response.data.total_results);
@@ -43,7 +48,7 @@ const useFetchData = (endpoint, payload) => {
         }
       }
     },
-    [endpoint]
+    [endpoint, query]
   );
 
   useEffect(() => {
@@ -55,11 +60,11 @@ const useFetchData = (endpoint, payload) => {
     }
   }, [currentPage, fetchData, prevCurrentPage, prevEndpoint, endpoint]);
 
-  const handleRefresh = async () => {
+  const handleRefresh = useCallback(async () => {
     setRefreshing(true);
     await fetchData(currentPage);
     setRefreshing(false);
-  };
+  }, [currentPage, fetchData]);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

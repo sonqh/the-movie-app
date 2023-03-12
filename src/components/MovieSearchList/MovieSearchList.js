@@ -1,42 +1,60 @@
-import { motion } from "framer-motion";
-import { Input, List } from "antd";
-// import "antd/dist/antd.css";
-// import "./styles.css";
-
-const { Search } = Input;
+import { Pagination } from "antd";
+import { useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import PullToRefresh from "react-simple-pull-to-refresh";
+import { PAGE_SIZE, SEARCH_ENDPOINT } from "../../Constant/Constant";
+import { useSelectedMovie } from "../Context/SelectedMovieContext";
+import useFetchData from "../hook/useFetchData";
+import MovieDetailsModal from "../Modal/MovieDetailsModal";
+import MovieList from "../SegmentedControl/MoviesList";
+import MovieSkeleton from "../Skeleton/MovieSkeleton";
 
 const MovieSearchList = ({ movies }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-8"
-    >
-      <div className="flex justify-center">
-        <Search
-          placeholder="Search movies"
-          style={{ width: 400 }}
-          size="large"
-        />
-      </div>
+  let [searchParams] = useSearchParams();
+  const searchValue = useMemo(() => searchParams.get("query"), [searchParams]);
+  const { selectedMovieContext } = useSelectedMovie();
+  const {
+    data,
+    handleRefresh,
+    currentPage,
+    handlePageChange,
+    isLoading,
+    refreshing,
+    totalResult,
+    errors,
+  } = useFetchData(SEARCH_ENDPOINT.MOVIE, searchValue);
 
-      <div className="my-8">
-        <List
-          itemLayout="horizontal"
-          dataSource={movies}
-          renderItem={(movie) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={<img alt={movie.title} src={movie.poster} />}
-                title={<a href={movie.link}>{movie.title}</a>}
-                description={movie.description}
+  useEffect(() => {
+    handleRefresh();
+  }, [searchValue, handleRefresh]);
+
+  return (
+    <>
+      {isLoading && <MovieSkeleton />}
+      {data && (
+        <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
+          <MovieList movies={data} />
+          {data.length > 0 && (
+            <div className="flex justify-center my-10">
+              <Pagination
+                pageSize={PAGE_SIZE}
+                current={errors ? 1 : currentPage}
+                total={totalResult}
+                onChange={handlePageChange}
+                showSizeChanger={false}
               />
-            </List.Item>
+            </div>
           )}
-        />
-      </div>
-    </motion.div>
+
+          {!!selectedMovieContext && (
+            <MovieDetailsModal
+              movie={selectedMovieContext}
+              visible={!!selectedMovieContext}
+            />
+          )}
+        </PullToRefresh>
+      )}
+    </>
   );
 };
 
