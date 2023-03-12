@@ -6,7 +6,7 @@ import { useSelectedMovie } from "../Context/SelectedMovieContext";
 
 const { Meta } = Card;
 
-const MovieGrid = ({ movies, isLoading }) => {
+const MovieGrid = ({ movies }) => {
   const { setSelectedMovieContext } = useSelectedMovie();
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -36,7 +36,7 @@ const MovieGrid = ({ movies, isLoading }) => {
 
   return (
     <motion.div
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+      className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -48,7 +48,6 @@ const MovieGrid = ({ movies, isLoading }) => {
             hoverable
             className="h-full"
             onClick={() => handleCardClick(movie)}
-            loading={isLoading}
             cover={
               <motion.img
                 className={classNames(

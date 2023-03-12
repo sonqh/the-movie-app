@@ -7,6 +7,7 @@ import useFetchData from "../hook/useFetchData";
 import MovieDetailsModal from "../Modal/MovieDetailsModal";
 import MovieGrid from "../SegmentedControl/MoviesGrid";
 import MovieList from "../SegmentedControl/MoviesList";
+import MovieSkeleton from "../Skeleton/MovieSkeleton";
 
 const NowPlaying = ({ viewMode }) => {
   const {
@@ -23,13 +24,13 @@ const NowPlaying = ({ viewMode }) => {
   const { selectedMovieContext } = useSelectedMovie();
   return (
     <>
-      {isLoading && <Spin spinning={isLoading} />}
+      {isLoading && <MovieSkeleton />}
       {data && (
         <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
           {viewMode === "list" ? (
-            <MovieList movies={data} isLoading={isLoading} />
+            <MovieList movies={data} />
           ) : (
-            <MovieGrid movies={data} isLoading={isLoading} />
+            <MovieGrid movies={data} />
           )}
 
           <div className="flex justify-center my-10">

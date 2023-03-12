@@ -1,4 +1,4 @@
-import { Pagination, Spin } from "antd";
+import { Pagination } from "antd";
 import React from "react";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { FETCH_ENDPOINT, PAGE_SIZE, VIEW_MODE } from "../../Constant/Constant";
@@ -7,6 +7,7 @@ import useFetchData from "../hook/useFetchData";
 import MovieDetailsModal from "../Modal/MovieDetailsModal";
 import MovieGrid from "../SegmentedControl/MoviesGrid";
 import MovieList from "../SegmentedControl/MoviesList";
+import MovieSkeleton from "../Skeleton/MovieSkeleton";
 
 const TopRated = ({ viewMode }) => {
   const {
@@ -23,13 +24,13 @@ const TopRated = ({ viewMode }) => {
   const { selectedMovieContext } = useSelectedMovie();
   return (
     <>
-      {isLoading && <Spin spinning={isLoading} />}
+      {isLoading && <MovieSkeleton />}
       {data && (
         <PullToRefresh onRefresh={handleRefresh} refreshing={refreshing}>
           {viewMode === VIEW_MODE.LIST ? (
-            <MovieList movies={data} isLoading={isLoading} />
+            <MovieList movies={data} />
           ) : (
-            <MovieGrid movies={data} isLoading={isLoading} />
+            <MovieGrid movies={data} />
           )}
 
           <div className="flex justify-center my-10">

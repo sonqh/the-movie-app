@@ -1,11 +1,19 @@
-import { AppstoreOutlined, BarsOutlined } from "@ant-design/icons";
-import { Layout, Segmented, Tabs } from "antd";
+import {
+  AppstoreOutlined,
+  BarsOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Layout, Segmented, Tabs, Input } from "antd";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { VIEW_MODE } from "../../Constant/Constant";
 import { SelectedMovieProvider } from "../Context/SelectedMovieContext";
+import HeaderWithSearchBar from "../Header/HeaderWithSearchBar";
+import MovieSearchList from "../MovieSearchList/MovieSearchList";
 import NowPlaying from "../NowPlaying/NowPlaying";
 import TopRated from "../TopRated/TopRated";
+
+const { Search } = Input;
 
 const { Header, Footer, Content } = Layout;
 
@@ -56,12 +64,13 @@ const Home = () => {
   const handleViewChange = (mode) => {
     setViewMode(mode);
   };
+  const handleSearch = (mode) => {
+    console.log("handleSearch == ", mode);
+  };
 
   return (
-    <Layout className="h-screen">
-      <Header className="bg-white shadow-sm">
-        <h1 className="text-2xl font-bold text-gray-800 p-2">My Movie Home</h1>
-      </Header>
+    <Layout className="min-h-screen">
+      <HeaderWithSearchBar handleSearch={handleSearch} />
       <Content className="bg-gray-100 flex-grow overflow-y-auto">
         <div className="bg-gray-100 flex-grow overflow-y-auto">
           <div className="flex items-center justify-between px-4 mt-6 mb-2">
@@ -90,6 +99,7 @@ const Home = () => {
               <SelectedMovieProvider>
                 <Tabs defaultActiveKey="now-playing" items={items} />
               </SelectedMovieProvider>
+              <MovieSearchList movies={[]} />
             </motion.div>
           </div>
         </div>
